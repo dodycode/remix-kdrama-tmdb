@@ -1,0 +1,8 @@
+name = "remix-nextui-cloudflare"
+compatibility_date = "2024-02-11"
+kv_namespaces = [
+  { binding = "cache", id = "cache" }
+]
+
+[vars]
+YOUR_VARIABLE = "your-value"
