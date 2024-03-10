@@ -1,4 +1,4 @@
-# Remix KDRAMA TMDB (The Movie Database) API
+# Remix TMDB (The Movie Database) KDRAMA List
 
 List of KDRAMA from TMDB API. Made with Remix, and NextUI. For practice purpose only.
 
