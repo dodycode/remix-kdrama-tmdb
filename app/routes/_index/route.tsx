@@ -36,7 +36,6 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
   return defer({
     kdramas,
-    APIToken,
   });
 }
 
@@ -44,8 +43,6 @@ export default function Index() {
   const data = useLoaderData<typeof loader>();
 
   const isHydrated = useHydrated();
-
-  console.log(data);
 
   if (!isHydrated) return <></>;
 
