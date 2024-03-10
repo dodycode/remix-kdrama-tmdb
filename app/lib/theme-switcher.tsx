@@ -56,6 +56,21 @@ export function getTheme() {
   );
 }
 
+export function computedTheme() {
+  //listen for changes to theme localStorage
+  const [theme, setTheme] = useState(getTheme());
+  useEffect(() => {
+    const handleThemeChange = () => {
+      setTheme(getTheme());
+    };
+    window.addEventListener("storage", handleThemeChange);
+    return () => {
+      window.removeEventListener("storage", handleThemeChange);
+    };
+  }, []);
+  return theme;
+}
+
 /**
  * This function will toggle the theme between light and dark and store the
  * value in localStorage.
@@ -66,6 +81,7 @@ export function toggleTheme() {
   let currentTheme = validateTheme(localStorage.getItem("theme"));
   const newTheme = currentTheme === "light" ? "dark" : "light";
   localStorage.setItem("theme", newTheme);
+  window.dispatchEvent(new Event("storage"));
   document.documentElement.setAttribute("data-theme", newTheme);
 }
 
@@ -73,9 +89,11 @@ export function setTheme(theme: Theme | string) {
   let themeToSet: Theme | null = validateTheme(theme);
   if (themeToSet) {
     localStorage.setItem("theme", themeToSet);
+    window.dispatchEvent(new Event("storage"));
     document.documentElement.setAttribute("data-theme", themeToSet);
   } else {
     localStorage.removeItem("theme");
+    window.dispatchEvent(new Event("storage"));
     document.documentElement.removeAttribute("data-theme");
   }
 }

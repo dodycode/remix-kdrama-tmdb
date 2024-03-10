@@ -1,7 +1,13 @@
 import React from "react";
-import { Navbar, NavbarBrand, NavbarContent, Switch } from "@nextui-org/react";
+import {
+  Input,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  Switch,
+} from "@nextui-org/react";
 
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { MoonIcon, SunIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { getTheme, toggleTheme } from "~/lib/theme-switcher";
 
 import { useHydrated } from "remix-utils/use-hydrated";
@@ -32,11 +38,32 @@ const ThemeSwitcher = () => {
 
 export default function Header() {
   return (
-    <Navbar shouldHideOnScroll>
+    <Navbar
+      classNames={{
+        wrapper: "w-full md:p-0 md:max-w-5xl",
+      }}
+      shouldHideOnScroll
+    >
       <NavbarBrand>
-        <p className="font-bold">REMIX NEXTUI VITE</p>
+        <p className="font-bold">KDRAMAFLIX</p>
       </NavbarBrand>
-      <NavbarContent justify="end">
+      <NavbarContent className="flex-1" justify="center">
+        <Input
+          classNames={{
+            base: "max-w-full h-10",
+            mainWrapper: "h-full",
+            input: "text-sm",
+            inputWrapper:
+              "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+          }}
+          placeholder="Type to search..."
+          size="sm"
+          startContent={<MagnifyingGlassIcon className="w-5 h-5" />}
+          type="search"
+          radius="sm"
+        />
+      </NavbarContent>
+      <NavbarContent className="hidden md:flex" justify="end">
         <ThemeSwitcher />
       </NavbarContent>
     </Navbar>

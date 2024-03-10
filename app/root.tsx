@@ -17,7 +17,7 @@ import {
   ThemeSwitcherSafeHTML,
   ThemeSwitcherScript,
 } from "./lib/theme-switcher";
-import { LoadingIndicator } from "./components/loading-indicator";
+import LoadingIndicator from "./components/loading-indicator";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -29,7 +29,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
         <ThemeSwitcherScript />
       </head>
-      <body>
+      <body className="overflow-hidden">
         <LoadingIndicator />
         <Header />
         {children}

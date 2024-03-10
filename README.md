@@ -1,26 +1,21 @@
-# Welcome to Remix + Vite + NextUI + Cloudflare
+# Remix KDRAMA TMDB (The Movie Database) API
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
+List of KDRAMA from TMDB API. Made with Remix, and NextUI. For practice purpose only.
 
 ## Getting Started
 
-```shellscript
-npx create-remix@latest --template https://github.com/dodycode/remix-nextui-cloudflare
-```
-
-## Built in theme switcher
-
-![theme switcher](theme-switcher.png)
-
-## Typegen
-
-Generate types for your Cloudflare bindings in `wrangler.toml`:
-
 ```sh
-npm run typegen
+npm install
 ```
 
-You will need to rerun typegen whenever you make changes to `wrangler.toml`.
+## Environment Variables
+
+Create a `.wrangler.toml` file in the root of the project and add the following:
+
+```toml
+[vars]
+THE_MOVIE_DB_ACCESS_TOKEN="YOUR_ACCESS_TOKEN"
+```
 
 ## Development
 
@@ -36,23 +31,3 @@ To run Wrangler:
 npm run build
 npm run start
 ```
-
-## Deployment
-
-> [!WARNING]  
-> Cloudflare does _not_ use `wrangler.toml` to configure deployment bindings.
-> You **MUST** [configure deployment bindings manually in the Cloudflare dashboard][bindings].
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then, deploy your app to Cloudflare Pages:
-
-```sh
-npm run deploy
-```
-
-[bindings]: https://developers.cloudflare.com/pages/functions/bindings/
