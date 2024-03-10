@@ -30,12 +30,13 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const page = url.searchParams.get("page") || 1;
 
   //@ts-ignore
-  const APIToken = context.cloudflare.env.THE_MOVIE_DB_ACCESS_TOKEN;
+  const APIToken = context.env.THE_MOVIE_DB_ACCESS_TOKEN;
 
   const kdramas = discoverTVShows(page as number, APIToken, sortBy);
 
   return defer({
     kdramas,
+    APIToken,
   });
 }
 
@@ -43,6 +44,8 @@ export default function Index() {
   const data = useLoaderData<typeof loader>();
 
   const isHydrated = useHydrated();
+
+  console.log(data);
 
   if (!isHydrated) return <></>;
 
