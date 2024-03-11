@@ -49,13 +49,10 @@ export default function MovieTrailerButton({
       autoplay: 1,
       playsinline: 1,
       controls: 1,
-      loop: 1,
-      playlist: trailer?.key,
+      loop: 0,
       modestbranding: 1, // hide youtube logo
       rel: 0, // hide related videos
       fs: 0, // hide fullscreen button,
-      start: 0,
-      end: 30,
     },
     width: "100%",
     height: "100%",
