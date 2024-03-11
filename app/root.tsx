@@ -29,7 +29,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
         <ThemeSwitcherScript />
       </head>
-      <body className="overflow-hidden">
+      <body>
         <LoadingIndicator />
         <Header />
         {children}
