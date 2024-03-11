@@ -10,7 +10,7 @@ import { computedTheme, getTheme } from "~/lib/theme-switcher";
 
 import type { Movie } from "./movie-list";
 
-const imageBaseURL = "https://image.tmdb.org/t/p/original";
+const imageBaseURL = "https://image.tmdb.org/t/p/w500";
 
 export default function MovieCard({
   poster_path,

@@ -7,7 +7,7 @@ type HStackProps = {
 
 export default function HStack({ children, className, ...props }: HStackProps) {
   return (
-    <div className={cn("flex", className)} {...props}>
+    <div className={cn("flex flex-wrap", className)} {...props}>
       {children}
     </div>
   );

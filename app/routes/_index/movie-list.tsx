@@ -3,6 +3,7 @@ import { useHydrated } from "remix-utils/use-hydrated";
 import { useEffect, useRef, useState } from "react";
 import { useFetcherWithPromise } from "~/hooks/use-promise-fetcher";
 import VirtualizedGrid from "./virtualized-grid";
+import { Link } from "@nextui-org/react";
 
 export type Movie = {
   poster_path: string;
@@ -12,6 +13,7 @@ export type Movie = {
   vote_count: number;
   popularity: number;
   overview: string;
+  id: number;
 };
 
 type MovieListProps = {
@@ -56,9 +58,14 @@ export default function MovieList({ movies }: MovieListProps) {
     const kdrama = items[itemsIndex];
 
     return (
-      <div style={style} key={itemsIndex}>
+      <Link
+        className="text-default-foreground"
+        href={`/detail/${kdrama.id}`}
+        style={style}
+        key={itemsIndex}
+      >
         <MovieCard {...kdrama} />
-      </div>
+      </Link>
     );
   };
 
@@ -83,7 +90,6 @@ export default function MovieList({ movies }: MovieListProps) {
       if (fetcher.data) {
         //@ts-ignore
         if (fetcher.data.kdramas.results.length > 0) {
-          console.log(fetcher.data);
           setItems((prevItems) => [
             ...prevItems,
             //@ts-ignore

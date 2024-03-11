@@ -14,12 +14,7 @@ export const api = async (
     body: method === "GET" ? undefined : JSON.stringify(body),
   });
 
-  const result: {
-    page?: number;
-    results?: any[];
-    total_pages?: number;
-    total_results?: number;
-  } = await response.json();
+  const result = await response.json();
 
   return result;
 };

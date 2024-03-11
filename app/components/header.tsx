@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Input,
+  Link,
   Navbar,
   NavbarBrand,
   NavbarContent,
@@ -45,7 +46,9 @@ export default function Header() {
       shouldHideOnScroll
     >
       <NavbarBrand>
-        <p className="font-bold">KDRAMAFLIX</p>
+        <Link href="/" color="foreground">
+          <p className="font-bold">KDRAMAFLIX</p>
+        </Link>
       </NavbarBrand>
       <NavbarContent className="flex-1" justify="center">
         <Input

@@ -41,15 +41,30 @@ export default function VirtualizedGrid({
               width={width + 24}
               ref={gridRef}
               onItemsRendered={(gridProps) => {
+                const {
+                  visibleRowStartIndex,
+                  visibleRowStopIndex,
+                  visibleColumnStopIndex,
+                  overscanRowStartIndex,
+                  overscanRowStopIndex,
+                  overscanColumnStopIndex,
+                } = gridProps;
+
+                const endCol = visibleColumnStopIndex + 1;
+                const endColOverscan = overscanColumnStopIndex + 1;
+
+                const visibleStartIndex = visibleRowStartIndex * endCol;
+                const visibleStopIndex = visibleRowStopIndex * endCol;
+
+                const overscanStartIndex =
+                  overscanRowStartIndex * endColOverscan;
+                const overscanStopIndex = overscanRowStopIndex * endColOverscan;
+
                 onItemsRendered({
-                  overscanStartIndex:
-                    gridProps.overscanRowStartIndex * responsiveColumnCount,
-                  overscanStopIndex:
-                    gridProps.overscanRowStopIndex * responsiveColumnCount,
-                  visibleStartIndex:
-                    gridProps.visibleRowStartIndex * responsiveColumnCount,
-                  visibleStopIndex:
-                    gridProps.visibleRowStopIndex * responsiveColumnCount,
+                  visibleStartIndex: visibleStartIndex,
+                  visibleStopIndex: visibleStopIndex,
+                  overscanStartIndex: overscanStartIndex,
+                  overscanStopIndex: overscanStopIndex,
                 });
               }}
             >
