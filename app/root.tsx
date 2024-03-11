@@ -6,6 +6,8 @@ import {
   ScrollRestoration,
   useRouteError,
   isRouteErrorResponse,
+  useNavigate,
+  useNavigation,
 } from "@remix-run/react";
 
 import { NextUIProvider } from "@nextui-org/react";
@@ -18,6 +20,7 @@ import {
   ThemeSwitcherScript,
 } from "./lib/theme-switcher";
 import LoadingIndicator from "./components/loading-indicator";
+import { useEffect } from "react";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -66,8 +69,26 @@ export function ErrorBoundary() {
 }
 
 export default function App() {
+  const navigate = useNavigate();
+  const navigation = useNavigation();
+
+  //if url is home, disable body scroll
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (navigation.location?.pathname === "/") {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [navigation.state]);
+
   return (
-    <NextUIProvider>
+    <NextUIProvider navigate={navigate}>
       <Outlet />
     </NextUIProvider>
   );

@@ -35,3 +35,27 @@ export const discoverTVShows = async (
 
   return response;
 };
+
+export const getTVShowDetails = async (id: string, token: string) => {
+  if (!token) throw new Error("No token provided");
+
+  const response = await api(`${baseURL}/tv/${id}`, "GET", token);
+
+  return response;
+};
+
+export const getTVShowCredits = async (id: string, token: string) => {
+  if (!token) throw new Error("No token provided");
+
+  const response = await api(`${baseURL}/tv/${id}/credits`, "GET", token);
+
+  return response;
+};
+
+export const getTVShowTrailer = async (id: string, token: string) => {
+  if (!token) throw new Error("No token provided");
+
+  const response = await api(`${baseURL}/tv/${id}/videos`, "GET", token);
+
+  return response;
+};

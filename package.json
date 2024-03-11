@@ -19,6 +19,7 @@
     "@remix-run/cloudflare-pages": "^2.8.1",
     "@remix-run/react": "^2.8.1",
     "clsx": "^2.1.0",
+    "fast-average-color": "^9.4.0",
     "framer-motion": "^11.0.8",
     "isbot": "^4.1.0",
     "miniflare": "^3.20231030.4",
@@ -27,6 +28,7 @@
     "react-virtualized-auto-sizer": "^1.0.24",
     "react-window": "^1.8.10",
     "react-window-infinite-loader": "^1.0.9",
+    "react-youtube": "^10.1.0",
     "remix-utils": "^7.5.0",
     "tailwind-merge": "^2.2.1"
   },
