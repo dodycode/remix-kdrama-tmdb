@@ -32,7 +32,7 @@ export default function MovieListHeader() {
           //get defaultSelectedKeys from the URL
           defaultSelectedKeys={[
             new URL(window.location.href).searchParams.get("sortBy") ||
-              "first_air_date.desc",
+              "popularity.desc",
           ]}
           onChange={(e) => {
             submit({ sortBy: e.target.value });

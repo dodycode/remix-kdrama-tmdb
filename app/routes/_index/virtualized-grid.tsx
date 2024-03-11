@@ -1,6 +1,6 @@
 import { FixedSizeGrid as Grid } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
-import AutoSizer from "react-virtualized-auto-sizer";
+import { AutoSizer } from "react-virtualized";
 
 type VirtualizedGridProps = {
   infiniteLoaderRef: React.MutableRefObject<any>;
@@ -32,7 +32,7 @@ export default function VirtualizedGrid({
         >
           {({ onItemsRendered }) => (
             <Grid
-              className="custom-scrollbar"
+              className="custom-scrollbar translate-x-[-10px]"
               columnCount={responsiveColumnCount}
               columnWidth={width / responsiveColumnCount}
               rowCount={Math.ceil(items.length / responsiveColumnCount)}

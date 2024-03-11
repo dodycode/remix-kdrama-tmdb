@@ -2,31 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-.custom-scrollbar {
-  overflow: hidden !important;
-  transition: all 0.3s ease-in-out !important;
-  -webkit-transition: all 0.3s ease-in-out !important;
-  -moz-transition: all 0.3s ease-in-out !important;
-  -ms-transition: all 0.3s ease-in-out !important;
-  -o-transition: all 0.3s ease-in-out !important;
-}
+@media screen and (min-width: 1024px) {
+  .custom-scrollbar {
+    overflow: hidden !important;
+    transition: all 0.3s ease-in-out !important;
+    -webkit-transition: all 0.3s ease-in-out !important;
+    -moz-transition: all 0.3s ease-in-out !important;
+    -ms-transition: all 0.3s ease-in-out !important;
+    -o-transition: all 0.3s ease-in-out !important;
+  }
 
-.custom-scrollbar:hover {
-  overflow-y: scroll !important;
-}
+  .custom-scrollbar:hover {
+    overflow-y: scroll !important;
+  }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  box-shadow: none;
-  -webkit-box-shadow: none;
-  background-color: transparent;
-}
+  .custom-scrollbar::-webkit-scrollbar-track {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: transparent;
+  }
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  background-color: transparent;
-}
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    background-color: transparent;
+  }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #6e6e6e;
-  border-radius: 3px;
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #6e6e6e;
+    border-radius: 3px;
+  }
 }
