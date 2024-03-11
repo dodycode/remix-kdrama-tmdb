@@ -5,7 +5,6 @@ import {
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { getLoadContext } from "./load-context";
-import fixReactVirtualized from "esbuild-plugin-react-virtualized";
 
 export default defineConfig({
   plugins: [
@@ -15,10 +14,4 @@ export default defineConfig({
     remix(),
     tsconfigPaths(),
   ],
-  optimizeDeps: {
-    esbuildOptions: {
-      //@ts-ignore
-      plugins: [fixReactVirtualized],
-    },
-  },
 });

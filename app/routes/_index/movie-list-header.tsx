@@ -2,8 +2,10 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Form, useSubmit } from "@remix-run/react";
 import { useEffect, useState } from "react";
+import { ThemeSwitcher } from "~/components/header";
 import HStack from "~/components/hstack";
 import Text from "~/components/text";
+import VStack from "~/components/vstack";
 
 export default function MovieListHeader() {
   const submit = useSubmit();
@@ -22,6 +24,9 @@ export default function MovieListHeader() {
             Discover TV Shows
           </Text>
         </HStack>
+        <VStack className="lg:hidden">
+          <ThemeSwitcher />
+        </VStack>
         <Select
           label="Sort by"
           name="sortBy"
