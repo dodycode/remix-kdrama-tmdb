@@ -1,12 +1,8 @@
 import MovieCard from "./movie-card";
 import { useHydrated } from "remix-utils/use-hydrated";
-import { FixedSizeGrid as Grid } from "react-window";
-import InfiniteLoader from "react-window-infinite-loader";
 import { useEffect, useRef, useState } from "react";
-import { useFetcher } from "@remix-run/react";
-import AutoSizer from "react-virtualized-auto-sizer";
-
-import "./custom-scrollbar.css";
+import { useFetcherWithPromise } from "~/hooks/use-promise-fetcher";
+import VirtualizedGrid from "./virtualized-grid";
 
 export type Movie = {
   poster_path: string;
@@ -24,7 +20,7 @@ type MovieListProps = {
 
 export default function MovieList({ movies }: MovieListProps) {
   const isHydrated = useHydrated();
-  const fetcher = useFetcher();
+  const fetcher = useFetcherWithPromise();
 
   const [items, setItems] = useState(movies);
   const [page, setPage] = useState(2);
@@ -33,6 +29,7 @@ export default function MovieList({ movies }: MovieListProps) {
   const [responsiveColumnCount, setResponsiveColumnCount] = useState(4);
 
   const infiniteLoaderRef = useRef(null);
+  const gridRef = useRef(null);
 
   const loadMoreItems = (shouldFetch: boolean) => {
     if (!shouldFetch) return;
@@ -41,16 +38,22 @@ export default function MovieList({ movies }: MovieListProps) {
     const params = new URLSearchParams(window.location.search);
     const sortBy = params.get("sortBy") || "first_air_date.desc";
 
-    fetcher.load(`/?index&sortBy=${sortBy}&page=${page}`);
-    setShouldFetch(false);
+    // return fetcher.load(`/?index&sortBy=${sortBy}&page=${page}`);
+
+    //set timeout between fetches
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        fetcher.load(`/?index&sortBy=${sortBy}&page=${page}`).then(() => {
+          resolve();
+        });
+      }, 1000);
+    });
   };
 
   const Row = ({ columnIndex, rowIndex, style }: any) => {
     const itemsIndex = rowIndex * responsiveColumnCount + columnIndex;
 
     const kdrama = items[itemsIndex];
-
-    console.log(items);
 
     return (
       <div style={style} key={itemsIndex}>
@@ -95,16 +98,15 @@ export default function MovieList({ movies }: MovieListProps) {
 
   //set responsive column count
   useEffect(() => {
+    //set initial column count
+    handleResize();
+
+    //add event listener for resize
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
-
-  //detect screen size on load
-  useEffect(() => {
-    handleResize();
   }, []);
 
   useEffect(() => {
@@ -116,47 +118,26 @@ export default function MovieList({ movies }: MovieListProps) {
       //@ts-ignore
       infiniteLoaderRef.current.resetloadMoreItemsCache();
     }
-  }, [movies, infiniteLoaderRef, responsiveColumnCount]);
+
+    //reset grid
+    if (gridRef.current) {
+      console.log("scrolling to top");
+      //@ts-ignore
+      gridRef.current.scrollToItem({ columnIndex: 0, rowIndex: 0 });
+    }
+  }, [movies, infiniteLoaderRef, responsiveColumnCount, gridRef]);
 
   if (!isHydrated) return <></>;
 
   return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <InfiniteLoader
-          ref={infiniteLoaderRef}
-          isItemLoaded={(index) => index < items.length}
-          itemCount={items.length + 1}
-          loadMoreItems={() => loadMoreItems(shouldFetch)}
-        >
-          {({ onItemsRendered, ref }) => (
-            <Grid
-              className="custom-scrollbar"
-              columnCount={responsiveColumnCount}
-              columnWidth={width / responsiveColumnCount}
-              rowCount={Math.ceil(items.length / responsiveColumnCount)}
-              rowHeight={430}
-              height={height}
-              width={width + 24}
-              ref={ref}
-              onItemsRendered={(gridProps) => {
-                onItemsRendered({
-                  overscanStartIndex:
-                    gridProps.overscanRowStartIndex * responsiveColumnCount,
-                  overscanStopIndex:
-                    gridProps.overscanRowStopIndex * responsiveColumnCount,
-                  visibleStartIndex:
-                    gridProps.visibleRowStartIndex * responsiveColumnCount,
-                  visibleStopIndex:
-                    gridProps.visibleRowStopIndex * responsiveColumnCount,
-                });
-              }}
-            >
-              {Row}
-            </Grid>
-          )}
-        </InfiniteLoader>
-      )}
-    </AutoSizer>
+    <VirtualizedGrid
+      infiniteLoaderRef={infiniteLoaderRef}
+      gridRef={gridRef}
+      items={items}
+      loadMoreItems={loadMoreItems}
+      responsiveColumnCount={responsiveColumnCount}
+      Row={Row}
+      shouldFetch={shouldFetch}
+    />
   );
 }
