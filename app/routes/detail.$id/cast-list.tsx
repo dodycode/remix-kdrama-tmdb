@@ -16,8 +16,8 @@ export default function CastList({ kdrama }: CastListProps) {
     <section className="my-8">
       <Text className="text-4xl font-bold mb-4">Cast</Text>
       <Grid className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-8">
-        {kdrama?.cast?.map((cast: any) => (
-          <Card shadow="sm" key={cast.cast_id} isPressable>
+        {kdrama?.cast?.map((cast: any, index: number) => (
+          <Card shadow="sm" key={`${cast.cast_id}-${index}`} isPressable>
             <CardBody className="overflow-visible p-0">
               <Image
                 shadow="sm"
