@@ -70,22 +70,6 @@ export function ErrorBoundary() {
 
 export default function App() {
   const navigate = useNavigate();
-  const navigation = useNavigation();
-
-  //if url is home, disable body scroll
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    if (navigation.location?.pathname === "/") {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [navigation.state]);
 
   return (
     <NextUIProvider navigate={navigate}>

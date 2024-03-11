@@ -26,7 +26,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request, context }: LoaderFunctionArgs) {
   //get search params
   const url = new URL(request.url);
-  const sortBy = url.searchParams.get("sortBy") || "first_air_date.desc";
+  const sortBy = url.searchParams.get("sortBy") || "popularity.desc";
   const page = url.searchParams.get("page") || 1;
 
   const APIToken = context.env.THE_MOVIE_DB_ACCESS_TOKEN;

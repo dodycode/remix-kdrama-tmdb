@@ -22,6 +22,9 @@ const ThemeSwitcher = () => {
 
   return (
     <Switch
+      classNames={{
+        wrapper: "px-0 mr-0",
+      }}
       defaultSelected={theme === "light"}
       onChange={() => toggleTheme()}
       aria-label="Toggle theme"
@@ -41,7 +44,7 @@ export default function Header() {
   return (
     <Navbar
       classNames={{
-        wrapper: "w-full md:p-0 md:max-w-5xl",
+        wrapper: "w-full max-w-[895px] lg:p-0 xl:max-w-5xl",
       }}
       shouldHideOnScroll
     >

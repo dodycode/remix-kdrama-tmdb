@@ -35,15 +35,15 @@ export default function MovieCard({
         theme === "dark" && "group transition-all duration-300 ease-in-out"
       )}
     >
-      <div className="p-1 md:p-4 md:scale-105 transition-all duration-300 ease-in-out">
+      <div className="p-1 w-full lg:p-4 lg:scale-105 transition-all duration-300 ease-in-out">
         <Image
           src={posterPath}
           alt={name}
           classNames={{
-            img: "h-full w-full object-cover group-hover:scale-125",
+            img: "h-full w-full object-cover lg:group-hover:scale-125",
             zoomedWrapper:
-              "w-full md:w-[200px] h-[280px] transition-all duration-300 ease-in-out",
-            wrapper: "h-[300px] w-full md:w-[200px]",
+              "w-full lg:w-[200px] h-[280px] transition-all duration-300 ease-in-out",
+            wrapper: "h-[300px] w-full lg:w-[200px] !max-w-full lg:max-w-fit",
           }}
           isBlurred
           isZoomed
