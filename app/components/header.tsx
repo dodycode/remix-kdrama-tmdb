@@ -13,7 +13,7 @@ import { getTheme, toggleTheme } from "~/lib/theme-switcher";
 
 import { useHydrated } from "remix-utils/use-hydrated";
 
-const ThemeSwitcher = () => {
+export const ThemeSwitcher = () => {
   const theme = getTheme();
 
   const isHydrated = useHydrated();

@@ -46,7 +46,7 @@ export default function Index() {
   if (!isHydrated) return <></>;
 
   return (
-    <main className="w-full px-4 lg:px-0 lg:max-w-4xl mx-auto mt-10">
+    <main className="w-full px-4 lg:px-0 lg:max-w-4xl mx-auto mt-4 lg:mt-10">
       <VStack className="gap-y-5 h-[calc(100vh-105px)]">
         <Suspense fallback={<MovieListHeaderSkeleton />}>
           <Await resolve={data.kdramas}>
