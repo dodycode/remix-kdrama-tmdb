@@ -16,7 +16,8 @@ export default function MovieCard({
   poster_path,
   first_air_date,
   name,
-}: Movie) {
+  genre,
+}: Movie & { genre: string }) {
   const isHydrated = useHydrated();
   const theme = computedTheme();
 
@@ -60,7 +61,7 @@ export default function MovieCard({
           {name}
         </Text>
         <HStack className="gap-x-1 items-center">
-          <Text className="text-xs font-semibold">Drama</Text>
+          <Text className="text-xs font-semibold">{genre}</Text>
           <DotFilledIcon className="w-3 h-3" />
           <Text className="text-xs font-semibold">
             {/* {new Date(first_air_date).getFullYear()} */}

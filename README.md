@@ -10,7 +10,7 @@ npm install
 
 ## Environment Variables
 
-Create a `.wrangler.toml` file in the root of the project and add the following:
+Create a `wrangler.toml` file in the root of the project and add the following:
 
 ```toml
 [vars]

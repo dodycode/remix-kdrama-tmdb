@@ -18,9 +18,10 @@ export type Movie = {
 
 type MovieListProps = {
   movies: Movie[];
+  genres: any;
 };
 
-export default function MovieList({ movies }: MovieListProps) {
+export default function MovieList({ movies, genres }: MovieListProps) {
   const isHydrated = useHydrated();
   const fetcher = useFetcherWithPromise();
 
@@ -39,15 +40,20 @@ export default function MovieList({ movies }: MovieListProps) {
     //get current params
     const params = new URLSearchParams(window.location.search);
     const sortBy = params.get("sortBy") || "first_air_date.desc";
+    const withGenres = params.get("with_genres") || "";
 
     // return fetcher.load(`/?index&sortBy=${sortBy}&page=${page}`);
 
     //set timeout between fetches
     return new Promise<void>((resolve) => {
       setTimeout(() => {
-        fetcher.load(`/?index&sortBy=${sortBy}&page=${page}`).then(() => {
-          resolve();
-        });
+        fetcher
+          .load(
+            `/?index&sortBy=${sortBy}&page=${page}&with_genres=${withGenres}`
+          )
+          .then(() => {
+            resolve();
+          });
       }, 1000);
     });
   };
@@ -57,6 +63,14 @@ export default function MovieList({ movies }: MovieListProps) {
 
     const kdrama = items[itemsIndex];
 
+    if (!kdrama) return <></>;
+
+    const genre =
+      genres.find(
+        //@ts-ignore
+        (genre: any) => genre.id === kdrama.genre_ids[0]
+      )?.name || "Unknown";
+
     return (
       <Link
         className="text-default-foreground"
@@ -64,7 +78,7 @@ export default function MovieList({ movies }: MovieListProps) {
         style={style}
         key={itemsIndex}
       >
-        <MovieCard {...kdrama} />
+        <MovieCard genre={genre} {...kdrama} />
       </Link>
     );
   };
@@ -82,18 +96,20 @@ export default function MovieList({ movies }: MovieListProps) {
   useEffect(() => {
     // Discontinue API calls if the last page has been reached
     if (fetcher.data) {
+      console.log("fetcher.data", fetcher.data);
+
       //@ts-ignore
-      if (fetcher.data.kdramas.results.length === 0) {
+      if (fetcher.data.data[0].results.length === 0) {
         setShouldFetch(false);
       }
 
       if (fetcher.data) {
         //@ts-ignore
-        if (fetcher.data.kdramas.results.length > 0) {
+        if (fetcher.data.data[0].results.length > 0) {
           setItems((prevItems) => [
             ...prevItems,
             //@ts-ignore
-            ...fetcher.data.kdramas.results,
+            ...fetcher.data.data[0].results,
           ]);
           setPage(page + 1);
           setShouldFetch(true);
