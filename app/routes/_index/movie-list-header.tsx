@@ -45,7 +45,13 @@ export default function MovieListHeader({ genres }: { genres: any }) {
                 "popularity.desc",
             ]}
             onChange={(e) => {
-              submit({ sortBy: e.target.value });
+              submit({
+                sortBy: e.target.value,
+                withGenres:
+                  new URL(window.location.href).searchParams.get(
+                    "with_genres"
+                  ) || null,
+              });
             }}
           >
             <SelectItem key="popularity.desc" value="popularity.desc">
