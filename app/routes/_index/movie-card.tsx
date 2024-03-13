@@ -36,7 +36,7 @@ export default function MovieCard({
         theme === "dark" && "group transition-all duration-300 ease-in-out"
       )}
     >
-      <div className="p-1 w-full lg:p-4 lg:scale-105 transition-all duration-300 ease-in-out">
+      <div className="p-1 lg:p-4 lg:scale-105 w-full transition-all duration-300 ease-in-out">
         <Image
           src={posterPath}
           alt={name}
@@ -46,7 +46,7 @@ export default function MovieCard({
               "w-full lg:w-[200px] h-[280px] transition-all duration-300 ease-in-out",
             wrapper: "h-[300px] w-full lg:w-[200px] !max-w-full lg:max-w-fit",
           }}
-          isBlurred
+          isBlurred={theme === "dark"}
           isZoomed
           loading="lazy"
         />

@@ -8,10 +8,12 @@ export const discoverTVShows = async (
   sortBy: string,
   withGenres: string
 ) => {
+  let isDefault = false;
   if (!token) throw new Error("No token provided");
 
   if (!withGenres) {
     withGenres = "18|10759|80|9648|10768";
+    isDefault = true;
   }
 
   //if withGenres contains comma, replace it with a pipe
@@ -46,7 +48,19 @@ export const discoverTVShows = async (
     const date = new Date();
     date.setFullYear(date.getFullYear() - 5);
     const date7YearsAgo = date.toISOString().split("T")[0];
-    APIUrl = `${baseURL}/discover/tv?air_date.gte=${date7YearsAgo}&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_original_language=ko`;
+    if (sortBy === "popularity.desc") {
+      //make sure it has vote average of 7 or more
+      //we are using vote average because we want to show popular shows with good ratings
+      APIUrl = `${baseURL}/discover/tv?vote_average.gte=7&air_date.gte=${date7YearsAgo}&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_original_language=ko`;
+    } else {
+      APIUrl = `${baseURL}/discover/tv?air_date.gte=${date7YearsAgo}&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_original_language=ko`;
+    }
+
+    if (isDefault) {
+      //don't show talk shows, reality, news, and documentary by default
+      const genresToExclude = "10764|10763|99|10767";
+      APIUrl += `&without_genres=${genresToExclude}`;
+    }
   }
 
   const response = await api(APIUrl, "GET", token);
