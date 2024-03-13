@@ -47,10 +47,13 @@ export default function MovieListHeader({ genres }: { genres: any }) {
             onChange={(e) => {
               submit({
                 sortBy: e.target.value,
-                withGenres:
-                  new URL(window.location.href).searchParams.get(
+                ...(new URL(window.location.href).searchParams.get(
+                  "with_genres"
+                ) && {
+                  with_genres: new URL(window.location.href).searchParams.get(
                     "with_genres"
-                  ) || null,
+                  ),
+                }),
               });
             }}
           >
@@ -95,10 +98,10 @@ export default function MovieListHeader({ genres }: { genres: any }) {
             })}
             onChange={(e) => {
               submit({
-                with_genres: e.target.value,
                 sortBy:
                   new URL(window.location.href).searchParams.get("sortBy") ||
                   "popularity.desc",
+                with_genres: e.target.value,
               });
             }}
             scrollShadowProps={{

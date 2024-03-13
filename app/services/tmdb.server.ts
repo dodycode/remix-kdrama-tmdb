@@ -25,23 +25,25 @@ export const discoverTVShows = async (
     .toISOString()
     .split("T")[0];
 
-  let APIUrl = `${baseURL}/discover/tv?air_date.lte=${dateNextMonthFromNowString}&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_origin_country=KR`;
-  if (sortBy === "popularity.asc" || sortBy === "vote_average.asc") {
+  let APIUrl = `${baseURL}/discover/tv?air_date.lte=${dateNextMonthFromNowString}&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_original_language=ko`;
+
+  if (sortBy === "vote_average.asc") {
     //less popular
     //make sure the shows already aired
     const today = new Date().toISOString().split("T")[0];
-    APIUrl = `${baseURL}/discover/tv?first_air_date.lte=${today}&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_origin_country=KR`;
+    APIUrl = `${baseURL}/discover/tv?first_air_date.lte=${today}&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_original_language=ko`;
   }
 
-  if (sortBy === "popularity.desc" || sortBy === "vote_average.desc") {
-    //most popular
-    if (withGenres === "18|10759|80|35|9648|10765|10768") {
-      //make sure vote_count is greater than 100
-      APIUrl = `${baseURL}/discover/tv?vote_count.gte=99&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_origin_country=KR`;
-    } else {
-      //dont check vote_count
-      APIUrl = `${baseURL}/discover/tv?with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_origin_country=KR`;
-    }
+  if (sortBy === "vote_average.desc") {
+    APIUrl = `${baseURL}/discover/tv?vote_count.gte=50&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_original_language=ko`;
+  }
+
+  if (sortBy === "popularity.desc" || sortBy === "popularity.asc") {
+    //get minimum date 5 years ago
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 5);
+    const date7YearsAgo = date.toISOString().split("T")[0];
+    APIUrl = `${baseURL}/discover/tv?air_date.gte=${date7YearsAgo}&with_genres=${withGenres}&include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sortBy}&with_original_language=ko`;
   }
 
   const response = await api(APIUrl, "GET", token);
