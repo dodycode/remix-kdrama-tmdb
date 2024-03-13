@@ -40,7 +40,7 @@ export default function MovieList({ movies, genres }: MovieListProps) {
     //get current params
     const params = new URLSearchParams(window.location.search);
     const sortBy = params.get("sortBy") || "first_air_date.desc";
-    const withGenres = params.get("with_genres") || "";
+    const withGenres = params.get("with_genres") || null;
 
     // return fetcher.load(`/?index&sortBy=${sortBy}&page=${page}`);
 
@@ -49,7 +49,9 @@ export default function MovieList({ movies, genres }: MovieListProps) {
       setTimeout(() => {
         fetcher
           .load(
-            `/?index&sortBy=${sortBy}&page=${page}&with_genres=${withGenres}`
+            `/?index&sortBy=${sortBy}&page=${page}${
+              withGenres && `&with_genres=${withGenres}`
+            }`
           )
           .then(() => {
             resolve();
