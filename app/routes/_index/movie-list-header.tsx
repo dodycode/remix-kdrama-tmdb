@@ -65,11 +65,11 @@ export default function MovieListHeader({ genres }: { genres: any }) {
               Less Popular
             </SelectItem>
             {/* Highest Rated */}
-            <SelectItem key="vote_average.desc" value="vote_average.desc">
+            <SelectItem key="vote_count.desc" value="vote_count.desc">
               Highest Rated
             </SelectItem>
             {/* Lowest Rated */}
-            <SelectItem key="vote_average.asc" value="vote_average.asc">
+            <SelectItem key="vote_count.asc" value="vote_count.asc">
               Lowest Rated
             </SelectItem>
             {/* Newest */}
