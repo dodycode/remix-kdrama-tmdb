@@ -12,6 +12,7 @@ import { MoonIcon, SunIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { getTheme, toggleTheme } from "~/lib/theme-switcher";
 
 import { useHydrated } from "remix-utils/use-hydrated";
+import DebouncedSearch from "./debounced-search";
 
 export const ThemeSwitcher = () => {
   const theme = getTheme();
@@ -44,7 +45,7 @@ export default function Header() {
   return (
     <Navbar
       classNames={{
-        wrapper: "w-full max-w-[895px] lg:p-0 xl:max-w-5xl",
+        wrapper: "w-full max-w-[895px] lg:p-0",
       }}
       shouldHideOnScroll
     >
@@ -54,20 +55,7 @@ export default function Header() {
         </Link>
       </NavbarBrand>
       <NavbarContent className="flex-1" justify="center">
-        <Input
-          classNames={{
-            base: "max-w-full h-10",
-            mainWrapper: "h-full",
-            input: "text-sm",
-            inputWrapper:
-              "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-          }}
-          placeholder="Type to search..."
-          size="sm"
-          startContent={<MagnifyingGlassIcon className="w-5 h-5" />}
-          type="search"
-          radius="sm"
-        />
+        <DebouncedSearch />
       </NavbarContent>
       <NavbarContent className="hidden md:flex" justify="end">
         <ThemeSwitcher />

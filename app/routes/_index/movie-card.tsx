@@ -1,16 +1,15 @@
 import { Image } from "@nextui-org/react";
-import { DividerHorizontalIcon, DotFilledIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { DotFilledIcon } from "@radix-ui/react-icons";
 import { useHydrated } from "remix-utils/use-hydrated";
 import HStack from "~/components/hstack";
 import Text from "~/components/text";
 import VStack from "~/components/vstack";
 import { cn } from "~/lib/cn";
-import { computedTheme, getTheme } from "~/lib/theme-switcher";
+import { computedTheme } from "~/lib/theme-switcher";
 
 import type { Movie } from "./movie-list";
 
-const imageBaseURL = "https://image.tmdb.org/t/p/w500";
+const imageBaseURL = "https://image.tmdb.org/t/p/w300";
 
 export default function MovieCard({
   poster_path,

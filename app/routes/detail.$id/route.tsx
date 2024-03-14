@@ -58,7 +58,7 @@ export default function ShowDetail() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <main className="w-full px-4 lg:px-0 lg:max-w-5xl mx-auto mt-10">
+    <main className="w-full px-4 lg:px-0 lg:max-w-4xl mx-auto mt-10">
       <Breadcrumbs className="mb-4" size="lg">
         <BreadcrumbItem href="/">Home</BreadcrumbItem>
         {/* @ts-ignore */}
