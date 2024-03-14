@@ -103,3 +103,19 @@ export const getTVShowGenres = async (token: string) => {
 
   return response;
 };
+
+export const searchTVShows = async (
+  page: number = 1, //for now, we are only showing 1 page. TEMPORARY
+  token: string,
+  query: string
+) => {
+  if (!token) throw new Error("No token provided");
+
+  const response = await api(
+    `${baseURL}/search/tv?query=${query}&include_adult=false&language=en-US&page=${page}`,
+    "GET",
+    token
+  );
+
+  return response;
+};
