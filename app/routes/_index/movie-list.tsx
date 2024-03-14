@@ -101,17 +101,17 @@ export default function MovieList({ movies, genres }: MovieListProps) {
       console.log("fetcher.data", fetcher.data);
 
       //@ts-ignore
-      if (fetcher.data.data[0].results.length === 0) {
+      if (fetcher.data.kdramas.results.length === 0) {
         setShouldFetch(false);
       }
 
       if (fetcher.data) {
         //@ts-ignore
-        if (fetcher.data.data[0].results.length > 0) {
+        if (fetcher.data.kdramas.results.length > 0) {
           setItems((prevItems) => [
             ...prevItems,
             //@ts-ignore
-            ...fetcher.data.data[0].results,
+            ...fetcher.data.kdramas.results,
           ]);
           setPage(page + 1);
           setShouldFetch(true);
