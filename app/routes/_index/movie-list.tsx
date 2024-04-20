@@ -77,19 +77,17 @@ export default function MovieList({ movies, genres, onFetching }: MovieListProps
 
     //set timeout between fetches
     return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        onFetching(true);
-        fetcher
-          .load(
-            `/?index&sortBy=${sortBy}&page=${page}${
-              withGenres && `&with_genres=${withGenres}`
-            }`
-          )
-          .then(() => {
-            resolve();
-            onFetching(false);
-          });
-      }, 1000);
+      onFetching(true);
+      fetcher
+        .load(
+          `/?index&sortBy=${sortBy}&page=${page}${
+            withGenres && `&with_genres=${withGenres}`
+          }`
+        )
+        .then(() => {
+          resolve();
+          onFetching(false);
+        });
     });
   };
 
