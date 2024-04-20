@@ -31,3 +31,11 @@ To run Wrangler:
 npm run build
 npm run start
 ```
+
+## Deployment 
+
+To deploy to Cloudflare Workers:
+
+```sh
+npm run build && npm run deploy
+```
