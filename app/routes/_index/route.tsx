@@ -12,7 +12,7 @@ import {
   getTVShowGenres,
   searchTVShows,
 } from "~/services/tmdb.server";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useHydrated } from "remix-utils/use-hydrated";
 import MovieListHeaderSkeleton from "./movie-list-header-skeleton";
 import MovieListSkeleton from "./movie-list-skeleton";
@@ -56,8 +56,19 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   });
 }
 
+const Footer = () => {
+  return (
+    <div
+      className="flex justify-center items-center w-full h-20"
+    >
+      Loading...
+    </div>
+  )
+}
+
 export default function Index() {
   const data = useLoaderData<typeof loader>();
+  const [isFetching, setIsFetching] = useState(false);
 
   const isHydrated = useHydrated();
 
@@ -85,12 +96,16 @@ export default function Index() {
                 if (!kdramas.results.length) return <div>No results</div>;
 
                 return (
-                  <MovieList
-                    //@ts-ignore
-                    genres={data.genres.genres}
-                    //@ts-ignore
-                    movies={kdramas.results}
-                  />
+                  <>
+                    <MovieList
+                      //@ts-ignore
+                      genres={data.genres.genres}
+                      //@ts-ignore
+                      movies={kdramas.results}
+                      onFetching={(fetching) => setIsFetching(fetching)}
+                    />
+                    {isFetching && <Footer />}
+                  </>
                 );
               }}
             </Await>

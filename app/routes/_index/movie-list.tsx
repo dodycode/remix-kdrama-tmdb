@@ -1,9 +1,12 @@
 import MovieCard from "./movie-card";
 import { useHydrated } from "remix-utils/use-hydrated";
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useFetcherWithPromise } from "~/hooks/use-promise-fetcher";
-import VirtualizedGrid from "./virtualized-grid";
 import { Link } from "@nextui-org/react";
+
+import { VirtuosoGrid } from "react-virtuoso";
+
+import "./movie-list.css";
 
 export type Movie = {
   poster_path: string;
@@ -19,9 +22,40 @@ export type Movie = {
 type MovieListProps = {
   movies: Movie[];
   genres: any;
+  onFetching: (isFetching: boolean) => void;
 };
 
-export default function MovieList({ movies, genres }: MovieListProps) {
+const movieComponents = {
+  List: forwardRef<HTMLDivElement, React.PropsWithChildren<{ style?: React.CSSProperties }>>(
+    ({ style, children, ...props }, ref) => (
+      <div
+        ref={ref}
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          ...style,
+        }}
+        {...props}
+      >
+        {children}
+      </div>
+    )
+  ),
+  Item: ({ children, ...props }: React.PropsWithChildren<{}>) => (
+    <div
+      style={{
+        width: '224px',
+        height: '420px',
+        position: 'relative'
+      }}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export default function MovieList({ movies, genres, onFetching }: MovieListProps) {
   const isHydrated = useHydrated();
   const fetcher = useFetcherWithPromise();
 
@@ -29,10 +63,7 @@ export default function MovieList({ movies, genres }: MovieListProps) {
   const [page, setPage] = useState(2);
   const [shouldFetch, setShouldFetch] = useState(true);
 
-  const [responsiveColumnCount, setResponsiveColumnCount] = useState(4);
-
-  const infiniteLoaderRef = useRef(null);
-  const gridRef = useRef(null);
+  const [vKey, setVKey] = useState(0);
 
   const loadMoreItems = (shouldFetch: boolean) => {
     if (!shouldFetch) return;
@@ -47,6 +78,7 @@ export default function MovieList({ movies, genres }: MovieListProps) {
     //set timeout between fetches
     return new Promise<void>((resolve) => {
       setTimeout(() => {
+        onFetching(true);
         fetcher
           .load(
             `/?index&sortBy=${sortBy}&page=${page}${
@@ -55,46 +87,13 @@ export default function MovieList({ movies, genres }: MovieListProps) {
           )
           .then(() => {
             resolve();
+            onFetching(false);
           });
       }, 1000);
     });
   };
 
-  const Row = ({ columnIndex, rowIndex, style }: any) => {
-    const itemsIndex = rowIndex * responsiveColumnCount + columnIndex;
-
-    const kdrama = items[itemsIndex];
-
-    if (!kdrama) return <></>;
-
-    const genre =
-      genres.find(
-        //@ts-ignore
-        (genre: any) => genre.id === kdrama.genre_ids[0]
-      )?.name || "Unknown";
-
-    return (
-      <Link
-        className="text-default-foreground"
-        href={`/detail/${kdrama.id}`}
-        style={style}
-        key={itemsIndex}
-      >
-        <MovieCard genre={genre} {...kdrama} />
-      </Link>
-    );
-  };
-
-  const handleResize = () => {
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-
-    if (mediaQuery.matches) {
-      setResponsiveColumnCount(2);
-    } else {
-      setResponsiveColumnCount(4);
-    }
-  };
-
+  //map new data to items
   useEffect(() => {
     // Discontinue API calls if the last page has been reached
     if (fetcher.data) {
@@ -120,48 +119,44 @@ export default function MovieList({ movies, genres }: MovieListProps) {
     }
   }, [fetcher.data]);
 
-  //set responsive column count
   useEffect(() => {
-    //set initial column count
-    handleResize();
-
-    //add event listener for resize
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  useEffect(() => {
-    //reset items when new data is passed
+    //reset items when data filter changes
     setItems(movies);
+    setVKey((prev) => prev + 1);
+  }, [movies]);
 
-    //reset infinite loader
-    if (infiniteLoaderRef.current) {
-      //@ts-ignore
-      infiniteLoaderRef.current.resetloadMoreItemsCache();
-    }
-
-    //reset grid
-    if (gridRef.current) {
-      console.log("scrolling to top");
-      //@ts-ignore
-      gridRef.current.scrollToItem({ columnIndex: 0, rowIndex: 0 });
-    }
-  }, [movies, infiniteLoaderRef, responsiveColumnCount, gridRef]);
-
+  
   if (!isHydrated) return <></>;
 
+  const Row = (_: number, kdrama: Movie) => {
+    if (!kdrama) return <></>;
+
+    const genre =
+      genres.find(
+        //@ts-ignore
+        (genre: any) => genre.id === kdrama.genre_ids[0]
+      )?.name || "Unknown";
+
+    return (
+      <Link
+        className="text-default-foreground w-full h-full"
+        href={`/detail/${kdrama.id}`}
+      >
+        <MovieCard genre={genre} {...kdrama} />
+      </Link>
+    );
+  };
+
   return (
-    <VirtualizedGrid
-      infiniteLoaderRef={infiniteLoaderRef}
-      gridRef={gridRef}
-      items={items}
-      loadMoreItems={loadMoreItems}
-      responsiveColumnCount={responsiveColumnCount}
-      Row={Row}
-      shouldFetch={shouldFetch}
+    <VirtuosoGrid
+      key={vKey}
+      totalCount={items.length}
+      className="h-screen"
+      components={movieComponents}
+      data={items}
+      itemContent={Row}
+      endReached={() => loadMoreItems(shouldFetch)}
+      useWindowScroll={true}
     />
-  );
+  )
 }
