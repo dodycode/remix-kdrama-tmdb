@@ -16,7 +16,8 @@ export default function MovieCard({
   first_air_date,
   name,
   genre,
-}: Movie & { genre: string }) {
+  isTransitioning,
+}: Movie & { genre: string; isTransitioning: boolean }) {
   const isHydrated = useHydrated();
   const theme = computedTheme();
 
@@ -40,7 +41,10 @@ export default function MovieCard({
           src={posterPath}
           alt={name}
           classNames={{
-            img: "h-full w-full object-cover lg:group-hover:scale-125",
+            img: cn(
+              "h-full w-full object-cover lg:group-hover:scale-125",
+              isTransitioning ? "vt-name-[movie-photo]" : ""
+            ),
             zoomedWrapper:
               "w-full lg:w-[200px] h-[280px] transition-all duration-300 ease-in-out",
             wrapper: "h-[300px] w-full lg:w-[200px] !max-w-full lg:max-w-fit",

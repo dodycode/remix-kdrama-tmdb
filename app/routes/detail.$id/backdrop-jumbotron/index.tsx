@@ -1,50 +1,21 @@
-import { FastAverageColor } from "fast-average-color";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { useHydrated } from "remix-utils/use-hydrated";
 import HStack from "~/components/hstack";
 import JumbotronPoster from "./poster";
 import { Await } from "@remix-run/react";
-import { Image, Skeleton } from "@nextui-org/react";
+import { Skeleton } from "@nextui-org/react";
 import MovieTitle from "./movie-title";
 import Text from "~/components/text";
 import VStack from "~/components/vstack";
 import { DotFilledIcon } from "@radix-ui/react-icons";
+import { cn } from "~/lib/cn";
+import { computedTheme } from "~/lib/theme-switcher";
 
 const backdropBaseURL = "https://image.tmdb.org/t/p/w1280";
 
-const getImageDominantColor = async (imageUrl: string) => {
-  const fac = new FastAverageColor();
-
-  try {
-    return await fac.getColorAsync(imageUrl);
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 export default function BackdropJumbotron({ kdrama }: { kdrama: any }) {
   const isHydrated = useHydrated();
-
-  const [bgDominantColor, setBgDominantColor] = useState<
-    [number, number, number]
-  >([0, 0, 0]);
-
-  const setupBgColor = async () => {
-    if (!kdrama) return;
-
-    const color = await getImageDominantColor(
-      `${backdropBaseURL}${kdrama.backdrop_path}`
-    );
-
-    if (color) {
-      const [r, g, b] = color.value;
-      setBgDominantColor([r, g, b]);
-    }
-  };
-
-  useEffect(() => {
-    setupBgColor();
-  }, []);
+  const theme = computedTheme();
 
   if (!isHydrated) return <></>;
 
@@ -60,13 +31,26 @@ export default function BackdropJumbotron({ kdrama }: { kdrama: any }) {
       <div
         className="p-12 backdrop-blur"
         style={{
-          background: `rgba(${[...bgDominantColor, 0.7]})`,
+          background:
+            theme !== "dark"
+              ? `rgba(${[...kdrama.bgDominantColor, 0.7]})`
+              : `rgba(${[0, 0, 0, 0.7]})`,
         }}
       >
         <HStack className="gap-8">
           <JumbotronPoster kdrama={kdrama} />
 
-          <VStack className="py-4 gap-2 flex-1">
+          <VStack
+            className={cn(
+              "py-4 gap-2 flex-1",
+              theme !== "dark"
+                ? {
+                    "backdrop-foreground-dark": kdrama.bgColorIsLight,
+                    "backdrop-foreground-light": !kdrama.bgColorIsLight,
+                  }
+                : "backdrop-foreground-light"
+            )}
+          >
             <Suspense
               fallback={
                 <Skeleton className="rounded-2xl">
@@ -81,24 +65,20 @@ export default function BackdropJumbotron({ kdrama }: { kdrama: any }) {
 
             <VStack className="gap-8">
               <HStack className="gap-2 items-center">
-                <Text className="text-white">{kdrama.first_air_date}</Text>
+                <Text>{kdrama.first_air_date}</Text>
                 <DotFilledIcon className="w-4 h-4" />
                 {kdrama.genres.map((genre: any, index: number) => (
-                  <Text key={genre.id} className="text-white">
+                  <Text key={genre.id}>
                     {genre.name} {index !== kdrama.genres.length - 1 && ","}
                   </Text>
                 ))}
                 <DotFilledIcon className="w-4 h-4" />
-                <Text className="text-white">
-                  {kdrama.number_of_episodes} episodes
-                </Text>
+                <Text>{kdrama.number_of_episodes} episodes</Text>
               </HStack>
 
               <VStack className="gap-2">
-                <Text className="font-bold text-xl text-white">Overview</Text>
-                <Text className="text-white inline-block">
-                  {kdrama.overview}
-                </Text>
+                <Text className="font-bold text-xl">Overview</Text>
+                <Text className="inline-block">{kdrama.overview}</Text>
               </VStack>
 
               {kdrama.crew && kdrama.crew.length > 0 && (
@@ -115,10 +95,8 @@ export default function BackdropJumbotron({ kdrama }: { kdrama: any }) {
 
                     return (
                       <VStack key={crew.id} className="gap-0">
-                        <Text className="font-bold text-white text-lg">
-                          {crew.name}
-                        </Text>
-                        <Text className="text-white text-sm">{crew.job}</Text>
+                        <Text className="font-bold text-lg">{crew.name}</Text>
+                        <Text className="text-sm">{crew.job}</Text>
                       </VStack>
                     );
                   })}

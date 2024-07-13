@@ -1,4 +1,4 @@
-import { Image, Input, Link } from "@nextui-org/react";
+import { Image, Input } from "@nextui-org/react";
 import { DotFilledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Text from "./text";
 import { cn } from "~/lib/cn";
@@ -7,6 +7,8 @@ import { useFetcher } from "@remix-run/react";
 import { IndexLoader } from "~/routes/_index/route";
 import { useEffect, useState } from "react";
 import { useDebounce } from "~/hooks/use-debounce";
+import { Link } from "@remix-run/react";
+
 import HStack from "./hstack";
 import VStack from "./vstack";
 
@@ -53,8 +55,9 @@ function Typeahead({
             return (
               <Link
                 key={result.id}
-                href={`/detail/${result.id}`}
+                to={`/detail/${result.id}`}
                 className="text-default-500 w-full"
+                unstable_viewTransition
               >
                 <HStack className="gap-2 pb-1">
                   <div className="transition-all duration-300 ease-in-out">
