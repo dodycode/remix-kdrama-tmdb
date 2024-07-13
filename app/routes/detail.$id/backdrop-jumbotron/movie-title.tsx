@@ -11,7 +11,7 @@ export default function MovieTitle({
 }) {
   return (
     <div className="flex gap-x-3 items-center">
-      <h1 className="text-3xl font-bold mb-1 text-white">
+      <h1 className="text-3xl font-bold mb-1">
         {name}{" "}
         <span className="font-normal">
           ({new Date(first_air_date).getFullYear()})

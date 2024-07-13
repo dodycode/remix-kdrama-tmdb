@@ -1,6 +1,6 @@
 import { Image, Skeleton } from "@nextui-org/react";
 import { Await } from "@remix-run/react";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
 
 type Movie = {
   poster_path: string;
@@ -28,7 +28,7 @@ export default function JumbotronPoster({ kdrama }: JumbotronPosterProps) {
         <Await resolve={kdrama}>
           {(kdrama) => (
             <Image
-              className="w-64 shadow-2xl"
+              className="w-64 shadow-2xl vt-name-[movie-photo]"
               src={posterPath}
               alt={`${kdrama.name} poster`}
             />

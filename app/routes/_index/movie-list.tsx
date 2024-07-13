@@ -2,7 +2,7 @@ import MovieCard from "./movie-card";
 import { useHydrated } from "remix-utils/use-hydrated";
 import { forwardRef, useEffect, useState } from "react";
 import { useFetcherWithPromise } from "~/hooks/use-promise-fetcher";
-import { Link } from "@nextui-org/react";
+import { Link, unstable_useViewTransitionState } from "@remix-run/react";
 
 import { VirtuosoGrid } from "react-virtuoso";
 
@@ -25,37 +25,73 @@ type MovieListProps = {
   onFetching: (isFetching: boolean) => void;
 };
 
-const movieComponents = {
-  List: forwardRef<HTMLDivElement, React.PropsWithChildren<{ style?: React.CSSProperties }>>(
-    ({ style, children, ...props }, ref) => (
-      <div
-        ref={ref}
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          ...style,
-        }}
-        {...props}
-      >
-        {children}
-      </div>
-    )
-  ),
-  Item: ({ children, ...props }: React.PropsWithChildren<{}>) => (
+const MovieComponent = {
+  List: forwardRef<
+    HTMLDivElement,
+    React.PropsWithChildren<{ style?: React.CSSProperties }>
+  >(({ style, children, ...props }, ref) => (
     <div
+      ref={ref}
       style={{
-        width: '224px',
-        height: '420px',
-        position: 'relative'
+        display: "flex",
+        flexWrap: "wrap",
+        ...style,
       }}
       {...props}
     >
       {children}
     </div>
-  )
-}
+  )),
+  Item: ({ children, ...props }: React.PropsWithChildren<{}>) => (
+    <div
+      style={{
+        width: "224px",
+        height: "420px",
+        position: "relative",
+      }}
+      {...props}
+    >
+      {children}
+    </div>
+  ),
+};
 
-export default function MovieList({ movies, genres, onFetching }: MovieListProps) {
+const RowComponent = ({
+  index,
+  kdrama,
+  genres,
+}: {
+  index: number;
+  kdrama: Movie;
+  genres: MovieListProps["genres"];
+}) => {
+  const to = `/detail/${kdrama.id}`;
+  const isTransitioning = unstable_useViewTransitionState(to);
+
+  if (!kdrama) return <></>;
+
+  const genre =
+    genres.find(
+      //@ts-ignore
+      (genre: any) => genre.id === kdrama.genre_ids[0]
+    )?.name || "Unknown";
+
+  return (
+    <Link
+      className="text-default-foreground w-full h-full"
+      to={to}
+      unstable_viewTransition
+    >
+      <MovieCard isTransitioning={isTransitioning} genre={genre} {...kdrama} />
+    </Link>
+  );
+};
+
+export default function MovieList({
+  movies,
+  genres,
+  onFetching,
+}: MovieListProps) {
   const isHydrated = useHydrated();
   const fetcher = useFetcherWithPromise();
 
@@ -91,6 +127,10 @@ export default function MovieList({ movies, genres, onFetching }: MovieListProps
     });
   };
 
+  const ItemContent = (index: number) => {
+    return <RowComponent index={index} kdrama={items[index]} genres={genres} />;
+  };
+
   //map new data to items
   useEffect(() => {
     // Discontinue API calls if the last page has been reached
@@ -123,38 +163,18 @@ export default function MovieList({ movies, genres, onFetching }: MovieListProps
     setVKey((prev) => prev + 1);
   }, [movies]);
 
-  
   if (!isHydrated) return <></>;
-
-  const Row = (_: number, kdrama: Movie) => {
-    if (!kdrama) return <></>;
-
-    const genre =
-      genres.find(
-        //@ts-ignore
-        (genre: any) => genre.id === kdrama.genre_ids[0]
-      )?.name || "Unknown";
-
-    return (
-      <Link
-        className="text-default-foreground w-full h-full"
-        href={`/detail/${kdrama.id}`}
-      >
-        <MovieCard genre={genre} {...kdrama} />
-      </Link>
-    );
-  };
 
   return (
     <VirtuosoGrid
       key={vKey}
       totalCount={items.length}
       className="h-screen"
-      components={movieComponents}
+      components={MovieComponent}
       data={items}
-      itemContent={Row}
+      itemContent={ItemContent}
       endReached={() => loadMoreItems(shouldFetch)}
       useWindowScroll={true}
     />
-  )
+  );
 }

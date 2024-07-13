@@ -32,3 +32,23 @@
     border-radius: 3px;
   }
 }
+
+@view-transition {
+  navigation: auto;
+}
+
+.backdrop-foreground-dark {
+  color: #000;
+}
+
+.backdrop-foreground-dark .text-default-500 {
+  color: #000;
+}
+
+.backdrop-foreground-light {
+  color: #fff;
+}
+
+.backdrop-foreground-light .text-default-500 {
+  color: #fff;
+}

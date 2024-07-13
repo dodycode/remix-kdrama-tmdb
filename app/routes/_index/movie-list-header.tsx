@@ -16,8 +16,11 @@ export default function MovieListHeader({ genres }: { genres: any }) {
     <Form
       method="GET"
       onChange={(e) => {
-        submit(e.currentTarget);
+        submit(e.currentTarget, {
+          unstable_viewTransition: true,
+        });
       }}
+      unstable_viewTransition
     >
       <HStack className="gap-2 w-full justify-between items-center">
         <HStack className="gap-x-2 items-center hidden md:flex">

@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+const plugin = require("tailwindcss/plugin");
+
 const { nextui } = require("@nextui-org/react");
 
 export default {
@@ -10,5 +12,14 @@ export default {
     extend: {},
   },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [
+    nextui(),
+    plugin(function ({ matchUtilities }: { matchUtilities: any }) {
+      matchUtilities({
+        "vt-name": (value: string) => ({
+          viewTransitionName: value,
+        }),
+      });
+    }),
+  ],
 } satisfies Config;

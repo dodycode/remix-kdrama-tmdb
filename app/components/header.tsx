@@ -1,15 +1,8 @@
-import React from "react";
-import {
-  Input,
-  Link,
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  Switch,
-} from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, Switch } from "@nextui-org/react";
 
 import { MoonIcon, SunIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { getTheme, toggleTheme } from "~/lib/theme-switcher";
+import { Link } from "@remix-run/react";
 
 import { useHydrated } from "remix-utils/use-hydrated";
 import DebouncedSearch from "./debounced-search";
@@ -50,8 +43,8 @@ export default function Header() {
       shouldHideOnScroll
     >
       <NavbarBrand>
-        <Link href="/" color="foreground">
-          <p className="font-bold">KDRAMAFLIX</p>
+        <Link to="/" unstable_viewTransition>
+          <p className="font-bold">KDRAMADB</p>
         </Link>
       </NavbarBrand>
       <NavbarContent className="flex-1" justify="center">

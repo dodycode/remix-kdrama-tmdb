@@ -6,13 +6,13 @@ import {
 } from "@remix-run/cloudflare";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import BackdropJumbotron from "./backdrop-jumbotron";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import {
   getTVShowCredits,
   getTVShowDetails,
   getTVShowTrailer,
 } from "~/services/tmdb.server";
-import { useEffect } from "react";
+import { getAverageColor } from "fast-average-color-node";
 import CastList from "./cast-list";
 
 export const meta: MetaFunction = () => {
@@ -25,6 +25,27 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+const backdropBaseURL = "https://image.tmdb.org/t/p/w1280";
+
+const getImageDominantColor = async (imageUrl: string) => {
+  try {
+    const color = await getAverageColor(imageUrl);
+    //return [r, g, b]
+    if (!color) throw new Error("No color found");
+    return {
+      value: [color.value[0], color.value[1], color.value[2]],
+      isLight: color.isLight,
+    };
+  } catch (e) {
+    console.error(e);
+  }
+
+  return {
+    value: [0, 0, 0],
+    isLight: false,
+  };
+};
+
 export async function loader({ context, params }: LoaderFunctionArgs) {
   const { id } = params;
   if (!id) return redirect("/");
@@ -33,6 +54,12 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
 
   const kdrama = await getTVShowDetails(id, token);
   if (!kdrama) return redirect("/");
+
+  const color = await getImageDominantColor(
+    //@ts-ignore
+    `${backdropBaseURL}${kdrama.backdrop_path}`
+  );
+  const bgDominantColor = color.value;
 
   const kdramaCredits = await getTVShowCredits(id, token);
   if (!kdramaCredits) return redirect("/");
@@ -50,6 +77,8 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
       ...kdramaCredits,
       // @ts-ignore
       trailer: trailer,
+      bgDominantColor,
+      bgColorIsLight: color.isLight,
     },
   });
 }
@@ -60,7 +89,11 @@ export default function ShowDetail() {
   return (
     <main className="w-full px-4 lg:px-0 lg:max-w-4xl mx-auto mt-10">
       <Breadcrumbs className="mb-4" size="lg">
-        <BreadcrumbItem href="/">Home</BreadcrumbItem>
+        <BreadcrumbItem>
+          <Link to="/" unstable_viewTransition>
+            Home
+          </Link>
+        </BreadcrumbItem>
         {/* @ts-ignore */}
         <BreadcrumbItem>{data.kdrama.name}</BreadcrumbItem>
       </Breadcrumbs>
