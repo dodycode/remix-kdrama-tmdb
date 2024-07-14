@@ -9,7 +9,6 @@ import Text from "~/components/text";
 import VStack from "~/components/vstack";
 import { DotFilledIcon } from "@radix-ui/react-icons";
 import { cn } from "~/lib/cn";
-import { computedTheme } from "~/lib/theme-switcher";
 import type { FastAverageColorRgba } from "fast-average-color";
 
 const backdropBaseURL = "https://image.tmdb.org/t/p/w1280";
@@ -26,7 +25,6 @@ export default function BackdropJumbotron({
   bgColorIsLight,
 }: BackdropJumbotron) {
   const isHydrated = useHydrated();
-  const theme = computedTheme();
 
   const [r, g, b] = bgDominantColor ?? [0, 0, 0];
 
