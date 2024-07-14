@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useHydrated } from "remix-utils/use-hydrated";
 import HStack from "~/components/hstack";
 import JumbotronPoster from "./poster";
@@ -10,12 +10,25 @@ import VStack from "~/components/vstack";
 import { DotFilledIcon } from "@radix-ui/react-icons";
 import { cn } from "~/lib/cn";
 import { computedTheme } from "~/lib/theme-switcher";
+import type { FastAverageColorRgba } from "fast-average-color";
 
 const backdropBaseURL = "https://image.tmdb.org/t/p/w1280";
 
-export default function BackdropJumbotron({ kdrama }: { kdrama: any }) {
+type BackdropJumbotron = {
+  kdrama: any;
+  bgDominantColor: FastAverageColorRgba;
+  bgColorIsLight: boolean;
+};
+
+export default function BackdropJumbotron({
+  kdrama,
+  bgDominantColor,
+  bgColorIsLight,
+}: BackdropJumbotron) {
   const isHydrated = useHydrated();
   const theme = computedTheme();
+
+  const [r, g, b] = bgDominantColor ?? [0, 0, 0];
 
   if (!isHydrated) return <></>;
 
@@ -26,30 +39,25 @@ export default function BackdropJumbotron({ kdrama }: { kdrama: any }) {
         backgroundImage: kdrama
           ? `url(${backdropBaseURL}${kdrama?.backdrop_path})`
           : "none",
+        boxShadow: `0 25px 50px -12px rgb(${r},${g},${b})`,
       }}
     >
       <div
         className="p-12 backdrop-blur"
         style={{
-          background:
-            theme !== "dark"
-              ? `rgba(${[...kdrama.bgDominantColor, 0.7]})`
-              : `rgba(${[0, 0, 0, 0.7]})`,
+          background: bgDominantColor
+            ? `rgba(${[r, g, b, 0.7]})`
+            : `rgba(${[0, 0, 0, 0.7]})`,
         }}
       >
         <HStack className="gap-8">
           <JumbotronPoster kdrama={kdrama} />
 
           <VStack
-            className={cn(
-              "py-4 gap-2 flex-1",
-              theme !== "dark"
-                ? {
-                    "backdrop-foreground-dark": kdrama.bgColorIsLight,
-                    "backdrop-foreground-light": !kdrama.bgColorIsLight,
-                  }
-                : "backdrop-foreground-light"
-            )}
+            className={cn("py-4 gap-2 flex-1", {
+              "backdrop-foreground-light": !bgColorIsLight,
+              "backdrop-foreground-dark": bgColorIsLight,
+            })}
           >
             <Suspense
               fallback={
