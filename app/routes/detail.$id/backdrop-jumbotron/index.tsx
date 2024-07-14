@@ -41,7 +41,7 @@ export default function BackdropJumbotron({
       }}
     >
       <div
-        className="p-12 backdrop-blur"
+        className="p-[15px] md:p-12 backdrop-blur"
         style={{
           background: bgDominantColor
             ? `rgba(${[r, g, b, 0.7]})`
