@@ -135,8 +135,6 @@ export default function MovieList({
   useEffect(() => {
     // Discontinue API calls if the last page has been reached
     if (fetcher.data) {
-      console.log("fetcher.data", fetcher.data);
-
       //@ts-ignore
       if (fetcher.data.kdramas.results.length === 0) {
         setShouldFetch(false);

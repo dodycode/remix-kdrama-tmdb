@@ -30,8 +30,8 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-const backdropBaseURL =
-  "https://cors.prasetyodody17.workers.dev/?https://image.tmdb.org/t/p/w1280";
+const imageBaseURL =
+  "https://cors.prasetyodody17.workers.dev/?https://image.tmdb.org/t/p/w300";
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
   const { id } = params;
@@ -73,7 +73,8 @@ export async function clientLoader({ serverLoader }: ClientLoaderFunctionArgs) {
   const data = await serverLoader<typeof loader>();
   if (!data.kdrama) return redirect("/");
 
-  const imageUrl = `${backdropBaseURL}${data.kdrama.backdrop_path}`;
+  const imageUrl = `${imageBaseURL}${data.kdrama.poster_path}`;
+
   const averageColor = await getAverageColor(imageUrl);
 
   return {
