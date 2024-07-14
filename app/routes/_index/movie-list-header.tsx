@@ -34,11 +34,11 @@ export default function MovieListHeader({ genres }: { genres: any }) {
           <ThemeSwitcher />
         </VStack>
 
-        <HStack className="gap-x-2 items-center w-full ml-auto md:ml-0 lg:w-[418px]">
+        <HStack className="gap-2 items-center w-full ml-auto flex-col md:flex-row md:ml-0 lg:w-[418px]">
           <Select
             label="Sort by"
             name="sortBy"
-            className="flex-shrink max-w-[150px] lg:max-w-[200px]"
+            className="flex-shrink md:max-w-[150px] lg:max-w-[200px]"
             placeholder="Sort by"
             size="sm"
             radius="sm"
@@ -91,7 +91,7 @@ export default function MovieListHeader({ genres }: { genres: any }) {
             placeholder="All"
             size="sm"
             radius="sm"
-            className="flex-shrink max-w-[150px] lg:max-w-[200px]"
+            className="flex-shrink md:max-w-[150px] lg:max-w-[200px]"
             {...(new URL(window.location.href).searchParams.get(
               "with_genres"
             ) && {

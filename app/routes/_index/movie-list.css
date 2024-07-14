@@ -1,6 +1,6 @@
-@media screen and (max-width: 340px) {
-  .virtuoso-grid-item{
-    width: 100%!important;
-    height: 380px!important;
+@media screen and (max-width: 480px) {
+  .virtuoso-grid-item {
+    width: 100% !important;
+    height: 380px !important;
   }
 }
