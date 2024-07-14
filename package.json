@@ -1,14 +1,15 @@
 {
-  "name": "kdramaflix",
+  "name": "remix-kdrama-tmdb",
+  "version": "1.0.0",
   "private": true,
   "sideEffects": false,
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
-    "deploy": "wrangler pages deploy ./build/client",
+    "deploy": "npm run build && wrangler pages deploy ./build/client",
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "start": "wrangler pages dev ./build/client",
+    "start": "npm run build && wrangler pages dev ./build/client",
     "typecheck": "tsc",
     "typegen": "wrangler types"
   },
@@ -52,7 +53,7 @@
     "typescript": "^5.1.6",
     "vite": "^5.1.0",
     "vite-tsconfig-paths": "^4.2.1",
-    "wrangler": "^3.32.0"
+    "wrangler": "^3.64.0"
   },
   "engines": {
     "node": ">=18.0.0"
