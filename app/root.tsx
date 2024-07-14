@@ -12,7 +12,8 @@ import {
 
 import { NextUIProvider } from "@nextui-org/react";
 
-import "./tailwind.css";
+import "./root.css";
+
 import Header from "./components/header";
 
 import {
@@ -20,7 +21,6 @@ import {
   ThemeSwitcherScript,
 } from "./lib/theme-switcher";
 import LoadingIndicator from "./components/loading-indicator";
-import { useEffect } from "react";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
