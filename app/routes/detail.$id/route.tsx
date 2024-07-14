@@ -5,86 +5,87 @@ import {
   redirect,
 } from "@remix-run/cloudflare";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import {
+  ClientLoaderFunctionArgs,
+  Link,
+  useLoaderData,
+} from "@remix-run/react";
+
 import BackdropJumbotron from "./backdrop-jumbotron";
-import { Link, useLoaderData } from "@remix-run/react";
 import {
   getTVShowCredits,
   getTVShowDetails,
   getTVShowTrailer,
 } from "~/services/tmdb.server";
-import { getAverageColor } from "fast-average-color-node";
 import CastList from "./cast-list";
+import getAverageColor from "~/lib/get-average-color";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "KDramaFlix" },
+    { title: "KDramaDB" },
     {
       name: "description",
-      content: "A Netflix clone for Korean dramas and movies",
+      content: "Korean Drama Database by dodycode",
     },
   ];
 };
 
-const backdropBaseURL = "https://image.tmdb.org/t/p/w1280";
+const backdropBaseURL =
+  "https://cors.prasetyodody17.workers.dev/?https://image.tmdb.org/t/p/w1280";
 
-const getImageDominantColor = async (imageUrl: string) => {
-  try {
-    const color = await getAverageColor(imageUrl);
-    //return [r, g, b]
-    if (!color) throw new Error("No color found");
-    return {
-      value: [color.value[0], color.value[1], color.value[2]],
-      isLight: color.isLight,
-    };
-  } catch (e) {
-    console.error(e);
-  }
-
-  return {
-    value: [0, 0, 0],
-    isLight: false,
-  };
-};
-
-export async function loader({ context, params }: LoaderFunctionArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const { id } = params;
   if (!id) return redirect("/");
 
   const token = context.env.THE_MOVIE_DB_ACCESS_TOKEN;
+  if (!token)
+    throw new Error(
+      "Oops no API token, please make sure your install this app correctly"
+    );
 
-  const kdrama = await getTVShowDetails(id, token);
-  if (!kdrama) return redirect("/");
+  // Fetch kdrama details, kdrama credits, and kdrama trailers in parallel
+  const [kdrama, kdramaCredits, kDramaShows] = await Promise.all([
+    getTVShowDetails(id, token),
+    getTVShowCredits(id, token),
+    getTVShowTrailer(id, token),
+  ]).catch((error) => {
+    console.error(error);
+    return [null, null, null];
+  });
 
-  const color = await getImageDominantColor(
-    //@ts-ignore
-    `${backdropBaseURL}${kdrama.backdrop_path}`
+  if (!kdrama || !kdramaCredits || !kDramaShows) return redirect("/");
+
+  //@ts-ignore
+  const trailer = kDramaShows.results.find(
+    (video: any) => video.type === "Trailer"
   );
-  const bgDominantColor = color.value;
-
-  const kdramaCredits = await getTVShowCredits(id, token);
-  if (!kdramaCredits) return redirect("/");
-
-  const kDramaShows = await getTVShowTrailer(id, token);
-  if (!kDramaShows) return redirect("/");
-
-  //find videos that has type "Trailer" in kDramaShows.results
-  // @ts-ignore
-  const trailer = kDramaShows.results.find((video) => video.type === "Trailer");
 
   return json({
     kdrama: {
       ...kdrama,
       ...kdramaCredits,
-      // @ts-ignore
-      trailer: trailer,
-      bgDominantColor,
-      bgColorIsLight: color.isLight,
+      trailer,
     },
   });
 }
 
+export async function clientLoader({ serverLoader }: ClientLoaderFunctionArgs) {
+  const data = await serverLoader<typeof loader>();
+  if (!data.kdrama) return redirect("/");
+
+  const imageUrl = `${backdropBaseURL}${data.kdrama.backdrop_path}`;
+  const averageColor = await getAverageColor(imageUrl);
+
+  return {
+    ...data,
+    ...averageColor,
+  };
+}
+
+clientLoader.hydrate = true;
+
 export default function ShowDetail() {
-  const data = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof clientLoader>();
 
   return (
     <main className="w-full px-4 lg:px-0 lg:max-w-4xl mx-auto mt-10">
@@ -97,7 +98,11 @@ export default function ShowDetail() {
         {/* @ts-ignore */}
         <BreadcrumbItem>{data.kdrama.name}</BreadcrumbItem>
       </Breadcrumbs>
-      <BackdropJumbotron kdrama={data.kdrama} />
+      <BackdropJumbotron
+        kdrama={data.kdrama}
+        bgDominantColor={data.bgDominantColor}
+        bgColorIsLight={data.bgColorIsLight}
+      />
       <CastList kdrama={data.kdrama} />
     </main>
   );

@@ -114,7 +114,6 @@ export default function DebouncedSearch() {
   const [debouncedSearch] = useDebounce(search, 300);
 
   useEffect(() => {
-    console.log(debouncedSearch);
     fetcher.load(`/?index&search=${debouncedSearch}`);
   }, [debouncedSearch]);
 

@@ -12,7 +12,7 @@ import {
   getTVShowGenres,
   searchTVShows,
 } from "~/services/tmdb.server";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import { useHydrated } from "remix-utils/use-hydrated";
 import MovieListHeaderSkeleton from "./movie-list-header-skeleton";
 import MovieListSkeleton from "./movie-list-skeleton";
@@ -21,10 +21,10 @@ export type IndexLoader = typeof loader;
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "KDramaFlix" },
+    { title: "KDramaDB" },
     {
       name: "description",
-      content: "A Netflix clone for Korean dramas and movies",
+      content: "Korean Drama Database by dodycode",
     },
   ];
 };
@@ -58,13 +58,11 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
 const Footer = () => {
   return (
-    <div
-      className="flex justify-center items-center w-full h-20"
-    >
+    <div className="flex justify-center items-center w-full h-20">
       Loading...
     </div>
-  )
-}
+  );
+};
 
 export default function Index() {
   const data = useLoaderData<typeof loader>();
