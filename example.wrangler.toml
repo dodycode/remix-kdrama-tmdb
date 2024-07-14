@@ -1,5 +1,7 @@
-name = "remix-nextui-cloudflare"
-compatibility_date = "2024-02-11"
+name = "kdramadb"
+compatibility_date = "2024-07-14"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./build/client"
 
 [vars]
 THE_MOVIE_DB_ACCESS_TOKEN="your_access_token"
