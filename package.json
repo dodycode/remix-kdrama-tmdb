@@ -32,7 +32,8 @@
     "react-window-infinite-loader": "^1.0.9",
     "react-youtube": "^10.1.0",
     "remix-utils": "^7.5.0",
-    "tailwind-merge": "^2.2.1"
+    "tailwind-merge": "^2.2.1",
+    "vaul": "^0.9.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230518.0",

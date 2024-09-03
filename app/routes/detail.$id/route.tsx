@@ -8,6 +8,7 @@ import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import {
   ClientLoaderFunctionArgs,
   Link,
+  Outlet,
   useLoaderData,
 } from "@remix-run/react";
 
@@ -19,6 +20,8 @@ import {
 } from "~/services/tmdb.server";
 import CastList from "./cast-list";
 import getAverageColor from "~/lib/get-average-color";
+import { Drawer } from "vaul";
+import { ClientOnly } from "remix-utils/client-only";
 
 export const meta: MetaFunction = () => {
   return [
@@ -105,6 +108,13 @@ export default function ShowDetail() {
         bgColorIsLight={data.bgColorIsLight}
       />
       <CastList kdrama={data.kdrama} />
+      <ClientOnly fallback={null}>
+        {() => (
+          <>
+            <Outlet />
+          </>
+        )}
+      </ClientOnly>
     </main>
   );
 }

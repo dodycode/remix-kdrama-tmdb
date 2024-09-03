@@ -1,6 +1,8 @@
 import { Image, Card, CardBody, CardFooter } from "@nextui-org/react";
+import { useNavigate } from "@remix-run/react";
 import Grid from "~/components/grid";
 import Text from "~/components/text";
+import useCurrentId from "~/hooks/use-current-id";
 
 type CastListProps = {
   kdrama: any;
@@ -9,6 +11,9 @@ type CastListProps = {
 const caseProfileBaseURL = "https://image.tmdb.org/t/p/w185";
 
 export default function CastList({ kdrama }: CastListProps) {
+  const navigate = useNavigate();
+  const currentMovieID = useCurrentId("id", "detail.$id");
+
   if (!kdrama) return <></>;
   if (!kdrama.cast.length) return <></>;
 
@@ -17,7 +22,14 @@ export default function CastList({ kdrama }: CastListProps) {
       <Text className="text-4xl font-bold mb-4">Cast</Text>
       <Grid className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-8">
         {kdrama?.cast?.map((cast: any, index: number) => (
-          <Card shadow="sm" key={`${cast.cast_id}-${index}`} isPressable>
+          <Card
+            onClick={() => {
+              navigate(`/detail/${currentMovieID}/${cast.id}`);
+            }}
+            shadow="sm"
+            key={`${cast.cast_id}-${index}`}
+            isPressable
+          >
             <CardBody className="overflow-visible p-0">
               <Image
                 shadow="sm"
