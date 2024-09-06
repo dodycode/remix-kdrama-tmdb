@@ -5,3 +5,4 @@ pages_build_output_dir = "./build/client"
 
 [vars]
 THE_MOVIE_DB_ACCESS_TOKEN="your_access_token"
+KV_NAMESPACE="kdramadb"

@@ -32,9 +32,9 @@ npm run build
 npm run start
 ```
 
-## Deployment 
+## Deployment
 
-To deploy to Cloudflare Workers:
+To deploy to Cloudflare Pages:
 
 ```sh
 npm run build && npm run deploy

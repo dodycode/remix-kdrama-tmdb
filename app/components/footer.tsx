@@ -10,7 +10,7 @@ export const Footer = ({ className }: { className?: string }) => {
     <AnimatePresence>
       {scrollDirection === "up" && (
         <motion.div
-          className="fixed bottom-0 flex items-center justify-center w-full"
+          className="fixed bottom-0 flex items-center justify-center w-full z-50"
           initial={{ y: "100%" }}
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
