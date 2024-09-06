@@ -22,7 +22,7 @@ export const Footer = ({ className }: { className?: string }) => {
               className
             )}
           >
-            <span className="flex justify-between items-center -translate-y-[2px]">
+            <span className="flex justify-between items-center">
               <span>
                 &copy; 2024{" "}
                 <Link
