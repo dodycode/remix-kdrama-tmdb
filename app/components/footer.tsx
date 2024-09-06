@@ -35,7 +35,10 @@ export const Footer = ({ className }: { className?: string }) => {
               </span>
               <span>
                 Spot some bug?{" "}
-                <Link href="#" color="foreground">
+                <Link
+                  href="https://github.com/dodycode/remix-kdrama-tmdb/issues"
+                  color="foreground"
+                >
                   Submit an issue
                 </Link>
               </span>
