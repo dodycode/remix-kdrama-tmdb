@@ -29,6 +29,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=1" />
+        <link rel="sitemap" href="/sitemap.xml" />
         <Meta />
         <Links />
         <ThemeSwitcherScript />
