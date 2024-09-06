@@ -7,7 +7,6 @@ import {
   useRouteError,
   isRouteErrorResponse,
   useNavigate,
-  useNavigation,
 } from "@remix-run/react";
 
 import { NextUIProvider } from "@nextui-org/react";
@@ -21,6 +20,7 @@ import {
   ThemeSwitcherScript,
 } from "./lib/theme-switcher";
 import LoadingIndicator from "./components/loading-indicator";
+import { Footer } from "./components/footer";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,6 +28,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=1" />
         <Meta />
         <Links />
         <ThemeSwitcherScript />
@@ -38,6 +39,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+
+        <Footer />
       </body>
     </ThemeSwitcherSafeHTML>
   );
