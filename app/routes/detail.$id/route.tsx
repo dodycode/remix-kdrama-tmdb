@@ -60,13 +60,13 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     (video: any) => video.type === "Trailer"
   );
 
-  return json({
+  return {
     kdrama: {
       ...kdrama,
       ...kdramaCredits,
       trailer,
     },
-  });
+  };
 }
 
 export async function clientLoader({ serverLoader }: ClientLoaderFunctionArgs) {
