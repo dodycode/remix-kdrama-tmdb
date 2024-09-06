@@ -6,7 +6,7 @@ export const loader = () => {
       User-agent: *
       Allow: /
   
-      Sitemap: http://www.kdramadb.dodycode.com/sitemap.xml
+      Sitemap: http://kdramadb.dodycode.com/sitemap.xml
       `;
 
   return new Response(robotText, {
