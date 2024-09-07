@@ -110,18 +110,21 @@ export async function clientLoader({
     return newData;
   };
 
-  // If cache is stale but not expired, return stale data and refresh in background
-  if (cachedData && now - cachedData.timestamp < STALE_TTL) {
-    // Trigger background refresh
-    fetchAndProcessData()
-      .catch((err) => console.error("Failed to revalidate stale data", err))
-      .finally(() => console.log("Cache refreshed in background"));
-  }
+  if (cachedData) {
+    const cacheAge = now - cachedData.timestamp;
 
-  if (cachedData && now - cachedData.timestamp < CACHE_TTL) {
-    console.log("loading from cache");
-    // Data is fresh, return it
-    return cachedData;
+    if (cacheAge < CACHE_TTL) {
+      console.log("Loading from fresh cache");
+      return cachedData;
+    } else if (cacheAge < STALE_TTL) {
+      console.log("Loading from stale cache, refreshing in background");
+      // Trigger background refresh
+      fetchAndProcessData()
+        .catch((err) => console.error("Failed to revalidate stale data", err))
+        .finally(() => console.log("Cache refreshed in background"));
+
+      return cachedData;
+    }
   }
 
   // If no cache or expired data, fetch new data
