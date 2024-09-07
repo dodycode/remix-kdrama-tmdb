@@ -87,45 +87,45 @@ export async function clientLoader({
   const cacheKey = `kdrama-${params.id}`;
   const cachedData: any = await localforage.getItem(cacheKey);
 
-  if (cachedData) {
-    if (Date.now() - cachedData.timestamp < CACHE_TTL) {
-      // Data is fresh, return it
-      return cachedData.data;
-    }
+  const now = Date.now();
+  if (cachedData && now - cachedData.timestamp < CACHE_TTL) {
+    console.log("loading from cache");
+    // Data is fresh, return it
+    return cachedData;
   }
 
-  // If no cache or stale data, fetch from server
-  const { data, id } = await serverLoader<typeof loader>();
+  // Function to fetch and process new data
+  const fetchAndProcessData = async () => {
+    const { data } = await serverLoader<typeof loader>();
+    if (!data?.kdrama) return redirect("/");
 
-  //@ts-ignore
-  if (!data.kdrama) return redirect("/");
+    const imageUrl = `${imageBaseURL}${data.kdrama.poster_path}`;
+    const averageColor = await getAverageColor(imageUrl);
 
-  //@ts-ignore
-  const imageUrl = `${imageBaseURL}${data.kdrama.poster_path}`;
-  const averageColor = await getAverageColor(imageUrl);
+    const newData = {
+      ...data,
+      ...averageColor,
+    };
 
-  const newData = {
-    ...data,
-    ...averageColor,
+    await localforage.setItem(cacheKey, {
+      data: newData,
+      timestamp: now,
+    });
+
+    return newData;
   };
 
-  // Update cache
-  await localforage.setItem(cacheKey, {
-    data: newData,
-    timestamp: Date.now(),
-  });
-
-  // If we had stale data, trigger a background refresh
-  if (cachedData && Date.now() - cachedData.timestamp < STALE_TTL) {
-    fetch(`/show/${id}?_data=routes/show.$id`)
-      .catch(() => {})
-      .finally(() => {
-        console.log("Cache refreshed in the background");
-      });
+  // If cache is stale but not expired, return stale data and refresh in background
+  if (cachedData && now - cachedData.timestamp < STALE_TTL) {
+    // Trigger background refresh
+    fetchAndProcessData()
+      .catch((err) => console.error("Failed to revalidate stale data", err))
+      .finally(() => console.log("Cache refreshed in background"));
   }
 
+  // If no cache or expired data, fetch new data
   return {
-    data: newData,
+    data: await fetchAndProcessData(),
   };
 }
 
