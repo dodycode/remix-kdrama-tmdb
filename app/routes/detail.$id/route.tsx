@@ -88,11 +88,6 @@ export async function clientLoader({
   const cachedData: any = await localforage.getItem(cacheKey);
 
   const now = Date.now();
-  if (cachedData && now - cachedData.timestamp < CACHE_TTL) {
-    console.log("loading from cache");
-    // Data is fresh, return it
-    return cachedData;
-  }
 
   // Function to fetch and process new data
   const fetchAndProcessData = async () => {
@@ -121,6 +116,12 @@ export async function clientLoader({
     fetchAndProcessData()
       .catch((err) => console.error("Failed to revalidate stale data", err))
       .finally(() => console.log("Cache refreshed in background"));
+  }
+
+  if (cachedData && now - cachedData.timestamp < CACHE_TTL) {
+    console.log("loading from cache");
+    // Data is fresh, return it
+    return cachedData;
   }
 
   // If no cache or expired data, fetch new data
