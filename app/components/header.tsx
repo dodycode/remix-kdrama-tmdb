@@ -59,7 +59,7 @@ export default function Header() {
         }}
       >
         <NavbarBrand>
-          <Link to="/" unstable_viewTransition>
+          <Link to="/" viewTransition>
             <p className="font-bold">KDRAMADB</p>
           </Link>
         </NavbarBrand>

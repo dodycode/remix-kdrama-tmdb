@@ -57,7 +57,7 @@ function Typeahead({
                 key={result.id}
                 to={`/detail/${result.id}`}
                 className="text-default-500 w-full"
-                unstable_viewTransition
+                viewTransition
               >
                 <HStack className="gap-2 pb-1">
                   <div className="transition-all duration-300 ease-in-out">

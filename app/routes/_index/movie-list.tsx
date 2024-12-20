@@ -2,7 +2,7 @@ import MovieCard from "./movie-card";
 import { useHydrated } from "remix-utils/use-hydrated";
 import { forwardRef, useEffect, useState } from "react";
 import { useFetcherWithPromise } from "~/hooks/use-promise-fetcher";
-import { Link, unstable_useViewTransitionState } from "@remix-run/react";
+import { Link, useViewTransitionState } from "@remix-run/react";
 
 import { VirtuosoGrid } from "react-virtuoso";
 
@@ -66,7 +66,7 @@ const RowComponent = ({
   genres: MovieListProps["genres"];
 }) => {
   const to = `/detail/${kdrama.id}`;
-  const isTransitioning = unstable_useViewTransitionState(to);
+  const isTransitioning = useViewTransitionState(to);
 
   if (!kdrama) return <></>;
 
@@ -80,7 +80,7 @@ const RowComponent = ({
     <Link
       className="text-default-foreground w-full h-full"
       to={to}
-      unstable_viewTransition
+      viewTransition
     >
       <MovieCard isTransitioning={isTransitioning} genre={genre} {...kdrama} />
     </Link>

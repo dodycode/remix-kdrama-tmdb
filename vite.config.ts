@@ -6,6 +6,12 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { getLoadContext } from "./load-context";
 
+declare module "@remix-run/cloudflare" {
+  interface Future {
+    v3_singleFetch: true;
+  }
+}
+
 export default defineConfig({
   plugins: [
     remixCloudflareDevProxy({
@@ -16,12 +22,16 @@ export default defineConfig({
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
-        unstable_lazyRouteDiscovery: true,
+        v3_lazyRouteDiscovery: true,
+        v3_singleFetch: true,
+        v3_routeConfig: true,
+        unstable_optimizeDeps: true,
       },
+      ignoredRouteFiles: ["**/*.css"],
     }),
     tsconfigPaths(),
   ],
   server: {
-    port: 3030,
+    port: 3000,
   },
 });

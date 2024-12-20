@@ -156,7 +156,7 @@ export default function ShowDetail() {
     <main className="w-full px-4 lg:px-0 lg:max-w-4xl mx-auto mt-10">
       <Breadcrumbs className="mb-4" size="lg">
         <BreadcrumbItem>
-          <Link to="/" unstable_viewTransition>
+          <Link to="/" viewTransition>
             Home
           </Link>
         </BreadcrumbItem>
